@@ -1,0 +1,29 @@
+name: Run Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - main  # Trigger the workflow when a pull request targets the main branch
+
+jobs:
+  test:
+    runs-on: windows-latest  # Using windows-latest as you're on Windows
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3  # This checks out your repository
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'  # You can change this to 'adoptopenjdk' if you prefer
+        java-version: '17'  # Java version 17 as per your setup
+
+    - name: Compile Code
+      run: |
+        javac -cp ".;./lib/*" src/LoginAppTest.java src/LoginApp.java  # Using ; for Windows file paths
+
+    - name: Run Tests
+      run: |
+        cd src
+        java -cp ".;../lib/*" org.junit.platform.console.ConsoleLauncher LoginAppTest  # Run JUnit tests
