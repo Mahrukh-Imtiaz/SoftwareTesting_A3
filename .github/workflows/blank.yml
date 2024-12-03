@@ -1,0 +1,29 @@
+name: Run Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: windows-latest  # Using windows-latest as you're on Windows
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'  # Update to your Java version (17)
+
+    - name: Compile Code
+      run: |
+        javac -cp ".;./lib/*" src/LoginAppTest.java src/LoginApp.java  # Using ; for Windows
+
+    - name: Run Tests
+      run: |
+        cd src
+        java -cp ".;../lib/*" org.junit.platform.console.ConsoleLauncher LoginAppTest  # Using ; for Windows
